@@ -61,7 +61,7 @@ on:
               "idShort": 2,
               "shortLink": "Iy3XGStt"
             },
-            "list": { "id": "5f70732bb7991045f878901e", "name": "todos" },
+            "list": { "id": "5f70732bb7991045f878901e", "name": "homework 3月" },
             "board": {
               "id": "5f4fbbc5250c34138444068d",
               "name": "ideas",
@@ -113,21 +113,24 @@ jobs:
   commit:
     name: commit
     runs-on: ubuntu-latest
-    if: ${{ on.script.outputs.type == 'createCard' }}
+    if: on.script.outputs.action.type == "createCard" && contains(on.script.outputs.action.list.name,'homework')
     steps:
+      - uses: actions/checkout@v2
       - name: parse message
         id: info
         uses: actions/github-script@v3
         env:
           MESSAGE: ${{ on.script.outputs.action.data.card.name }}
         with:
-          github-token: ${{ secrets.PERSONAL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const {parseMessage} = require(`${process.env.GITHUB_WORKSPACE}/scripts/parse-message.js`)
             const info = parseMessage(process.env.MESSAGE)
             return info
       - name: create commit
         env:
-          COUNT: ${{ steps.info.outputs.commitCount }}
-          MESSAGE: ${{ steps.info.outputs.name}}
+          COUNT: ${{ fromJSON(steps.info.outputs.result).commitCount }}
+          MESSAGE: ${{ fromJSON(steps.info.outputs.result).name}}
+          USERNAME: ${{ on.script.outputs.action.memberCreator.username }}
+          EMAIL: ${{ on.script.outputs.action.memberCreator.username }}@example.com
         run: ./scripts/commit.sh

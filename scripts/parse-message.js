@@ -33,7 +33,7 @@ exports.parseMessage = (message) => {
     }
     const commitCount = Math.floor(time / 10);
     const info = {
-      name,
+      name: `work: ${name}`,
       time: Number(time),
       unit: "m",
       commitCount: commitCount,
