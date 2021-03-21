@@ -113,9 +113,8 @@ jobs:
   commit:
     name: commit
     runs-on: ubuntu-latest
-    if: on.script.outputs.action.type == "createCard" && contains(on.script.outputs.action.list.name,'homework')
+    if: on.script.outputs.action.type == "createCard" && contains(on.script.outputs.action.data.list.name,'homework')
     steps:
-      - uses: actions/checkout@v2
       - name: parse message
         id: info
         uses: actions/github-script@v3
