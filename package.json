@@ -5,7 +5,11 @@
   "version": "1.0.0",
   "author": "Owen Young <theowenyoung@gmail.com>",
   "devDependencies": {
-    "actionsflow": "^1.11.2"
+    "actionsflow": "^1.11.2",
+    "eslint": "^7.22.0",
+    "eslint-plugin-jest": "^24.3.2",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
   },
   "keywords": [
     "actionsflow",
@@ -18,7 +22,7 @@
     "watch": "actionsflow start -w",
     "act": "act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env -P ubuntu-latest=actionsflow/act-environment:v1 -P ubuntu-18.04=actionsflow/act-environment:v1",
     "clean": "actionsflow clean",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

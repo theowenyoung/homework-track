@@ -1,0 +1,133 @@
+on:
+  script:
+    run: |
+      return [{
+        "model": {
+          "id": "5f4fbbc5250c34138444068d",
+          "name": "ideas",
+          "desc": "",
+          "descData": null,
+          "closed": false,
+          "idOrganization": null,
+          "idEnterprise": null,
+          "pinned": false,
+          "url": "https://trello.com/b/iCZf1Oev/ideas",
+          "shortUrl": "https://trello.com/b/iCZf1Oev",
+          "prefs": {
+            "permissionLevel": "private",
+            "hideVotes": false,
+            "voting": "disabled",
+            "comments": "members",
+            "invitations": "members",
+            "selfJoin": true,
+            "cardCovers": true,
+            "isTemplate": false,
+            "cardAging": "regular",
+            "calendarFeedEnabled": false,
+            "background": "lime",
+            "backgroundImage": null,
+            "backgroundImageScaled": null,
+            "backgroundTile": false,
+            "backgroundBrightness": "dark",
+            "backgroundColor": "#4BBF6B",
+            "backgroundBottomColor": "#4BBF6B",
+            "backgroundTopColor": "#4BBF6B",
+            "canBePublic": true,
+            "canBeEnterprise": true,
+            "canBeOrg": true,
+            "canBePrivate": true,
+            "canInvite": true
+          },
+          "labelNames": {
+            "green": "",
+            "yellow": "",
+            "orange": "",
+            "red": "",
+            "purple": "",
+            "blue": "",
+            "sky": "",
+            "lime": "",
+            "pink": "",
+            "black": ""
+          }
+        },
+        "action": {
+          "id": "5f7073311f0aab7e1c3dd44c",
+          "idMemberCreator": "5f4fbba99b140e21cceebdb1",
+          "data": {
+            "card": {
+              "id": "5f7073311f0aab7e1c3dd44b",
+              "name": "洗衣服 30分钟",
+              "idShort": 2,
+              "shortLink": "Iy3XGStt"
+            },
+            "list": { "id": "5f70732bb7991045f878901e", "name": "todos" },
+            "board": {
+              "id": "5f4fbbc5250c34138444068d",
+              "name": "ideas",
+              "shortLink": "iCZf1Oev"
+            }
+          },
+          "type": "createCard",
+          "date": "2020-09-27T11:10:41.983Z",
+          "limits": {},
+          "appCreator": null,
+          "display": {
+            "translationKey": "action_create_card",
+            "entities": {
+              "card": {
+                "type": "card",
+                "id": "5f7073311f0aab7e1c3dd44b",
+                "shortLink": "Iy3XGStt",
+                "text": "test item"
+              },
+              "list": {
+                "type": "list",
+                "id": "5f70732bb7991045f878901e",
+                "text": "todos"
+              },
+              "memberCreator": {
+                "type": "member",
+                "id": "5f4fbba99b140e21cceebdb1",
+                "username": "theowenyoung",
+                "text": "Owen Young"
+              }
+            }
+          },
+          "memberCreator": {
+            "id": "5f4fbba99b140e21cceebdb1",
+            "username": "theowenyoung",
+            "activityBlocked": false,
+            "avatarHash": "6f3911adf8ac1a7d23b57329dd2412dc",
+            "avatarUrl": "https://trello-members.s3.amazonaws.com/5f4fbba99b140e21cceebdb1/6f3911adf8ac1a7d23b57329dd2412dc",
+            "fullName": "Owen Young",
+            "idMemberReferrer": null,
+            "initials": "OY",
+            "nonPublic": {},
+            "nonPublicAvailable": true
+          }
+        }
+      }]
+    deduplicationKey: action.id
+jobs:
+  commit:
+    name: commit
+    runs-on: ubuntu-latest
+    if: ${{ on.script.outputs.type }} == "createCard"
+    steps:
+      - name: parse message
+        id: info
+        uses: actions/github-script@v3
+        env:
+          MESSAGE: ${{ on.script.outputs.action.data.card.name }}
+        with:
+          github-token: ${{ secrets.PERSONAL_TOKEN }}
+          script: |
+            const {parseMessage} = require(`${process.env.GITHUB_WORKSPACE}/scripts/parse-message.js`)
+            const info = parseMessage(process.env.MESSAGE)
+            return info
+      - name: create commit
+        env:
+          COUNT: ${{ steps.info.outputs.commitCount }}
+          MESSAGE: ${{ steps.info.outputs.name}}
+        run: ./scripts/commit.sh

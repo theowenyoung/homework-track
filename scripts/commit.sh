@@ -1,0 +1,2 @@
+echo $MESSAGE
+echo $COUNT
