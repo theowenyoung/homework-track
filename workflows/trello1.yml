@@ -113,7 +113,7 @@ jobs:
   commit:
     name: commit
     runs-on: ubuntu-latest
-    if: ${{ on.script.outputs.type }} == "createCard"
+    if: ${{ on.script.outputs.type == 'createCard' }}
     steps:
       - name: parse message
         id: info
